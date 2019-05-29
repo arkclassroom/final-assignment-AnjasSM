@@ -1,9 +1,7 @@
 const express = require("express");
 const app = express();
 const db = require("./db");
-const port = 4000;
 const bodyParser = require("body-parser"); //body parser
-
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 app.use((req, res, next) => {
@@ -14,12 +12,13 @@ app.use((req, res, next) => {
 });
 
 //port declaration
+const port = 4000;
 app.listen(port, () => {
     console.log(`server running on http://localhost:${port}`);
 });
 
 //homepage
-app.get('/',() => {
+app.get('/',(req, res, next) => {
     res.send(`Backend Running on Port : ${port}`);
 });
 
@@ -46,8 +45,8 @@ app.get('/items/:id', (req,res,next) => {
 
 //add items to db
 app.post('/items', (req,res,next) => {
-    const sql = `insert into Items(productName,price,category,stock,createdAt) values(?,?,?,?,datetime(${'now'}))`
-    const params = [req.body.productName,req.body.price,req.body.category,req.body.stock];
+    const sql = "insert into Items(productName,category,price,stock) values(?,?,?,?)"
+    const params = [req.body.productName,req.body.category,req.body.price,req.body.stock];
 
     db.run(sql, params, (err, data) => {
         if(err) res.json({"error": err.message})
@@ -57,12 +56,16 @@ app.post('/items', (req,res,next) => {
 
 //update items from db
 app.put('/items/:id', (res, req, next) => {
-    const sql = "update Items set productName = ?,price = ?,category = ? ,stock = ?"
-    const params = [req.body.productName,req.body.price,req.body.category,req.body.stock];
+    const sql = `update Items set 
+        productName = ?,
+        category = ?,
+        price = ?,
+        stock = ?`
+    const params = [req.body.productName,req.body.category,req.body.price,req.body.stock];
 
     db.run(sql, params, (err, data) => {
         if(err) res.json({"error": err.message})
-        res.json({"message": "contact updated"})
+        res.json({"message": "items updated"})
     })
 })
 
