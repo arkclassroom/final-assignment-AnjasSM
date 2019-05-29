@@ -1,21 +1,19 @@
-const base_url = "http://localhost:4000/Items/";
+const base_url = "http://localhost:4000/items/";
 
-let user = "x";
-
-let contactID = [0];
+let itemID = [0];
 
 //get data from input form
 const getInput = () => {
-    let productName = document.getElementById("product-name").value;
-    let category = document.getElementById("category").value;
-    let price = document.getElementById("price").value;
-    let stock = document.getElementById("stock").value;
+    let productName = document.getElementById("product-name");
+    let category = document.getElementById("category");
+    let price = document.getElementById("price");
+    let stock = document.getElementById("stock");
 
     let input = {
-        productName : productName,
-        category : category,
-        price : price,
-        stock : stock
+        productNamevalue : productName.value,
+        category : category.value,
+        price : price.value,
+        stock : stock.value
     }
     return input;
 };
@@ -31,26 +29,16 @@ const clearForm = () => {
 
 function isValid(productName, price, stock) {
     const numberval = /^[0-9]+$/;
-    
-    if( productName !='' && price !='' && stock !='') {
-      if(productName.length > 3) {
-        if(price.match(numberval)) {
-          if(stock.match(numberval)){
-            return true;
-          } else {
-            alert('stock input must a number')
-          }
-        } else {
-          alert('price input must a number');
-          return false;
-        }
+    if(productName != "" && price != "" && stock != "") {
+      if(productName.length > 3 && price.length > 3) {
+          return true
       } else {
-        alert('Product Name input minimal 4 character');
-        return false;
+          alert("input minimal 3 character")
+          return false
       }
     } else {
-      alert('Input Cant Empty');
-      return false;
+      alert("input cant empty")
+      return false
     }
   };
 
@@ -60,8 +48,8 @@ const showData = (data) => {
 
     data.map(item => {
         let row = tbody.insertRow();
-        row.setAttribute("id", `db-${item.id}`);
-
+        row.setAttribute("id", `db-${item.id}`)
+        
         let cell1 = row.insertCell(0);
         let cell2 = row.insertCell(1);
         let cell3 = row.insertCell(2);
@@ -71,20 +59,19 @@ const showData = (data) => {
 
         cell1.innerHTML = item.productName;
         cell2.innerHTML = item.category;
-        cell3.innerHTML = item.price;
+        cell3.innerHTML = `Rp. ${item.price}`;
+        if(item.stock == 0) {
+          cell4.setAttribute("style", "background-color:#ff0000")
+      } else if(item.stock <= 10) {
+        cell4.setAttribute("style", "background-color:#f6ff00")
+      } else if(item.stock > 10) {
+        cell4.setAttribute("style", "background-color:#11ff00")        
+      }
         cell4.innerHTML = item.stock;
         cell5.innerHTML = item.createdAt;
         cell6.innerHTML = `
-        <a href="#" > <i id="edit"  db-id=${contact.id} class="fas fa-user-edit"></i></a> 
-        <a href="#" > <i id="delete"  db-id=${contact.id} class="fas fa-trash"></i> </a>`;
-
-        if(item.stock == 0) {
-            document.getElementById("stock-table").style.color = "#ff0000";
-        } else if(item.stock <= 10) {
-            document.getElementById("stock-table").style.color = "#f6ff00";
-        } else if(item.stock > 10) {
-            document.getElementById("stock-table").style.color = "#11ff00";            
-        }
+        <a href="#"><i id="edit" db-id=${item.id} class="fas fa-user-edit style="color:red"></i></a> |
+        <a href="#"><i id="delete" db-id=${item.id} class="fas fa-trash" style="color:red"></i></a>`;
     })
 };
 
@@ -98,7 +85,7 @@ const view = () => {
 //click event
 document.addEventListener("click", e =>{
     //btn add new product
-    if(e.target.id === "add") {
+    if(e.target.id == "add-product") {
         let input = getInput();
         const valid = isValid(input.productName, input.price, input.stock);
         if(valid) {
@@ -119,7 +106,7 @@ document.addEventListener("click", e =>{
 
     //btn delete
     if(e.target.id == "delete") {
-        const id = e.target.attribute[1].nodevalue;
+        const id = e.target.attributes[1].value;
         if(confirm('Are You Sure to Delete This Item?')) {
             fetch(`${base_url}${id}`, {
                 method: "DELETE"
@@ -141,8 +128,8 @@ document.addEventListener("click", e =>{
             productName.value = data.productName;
             category.value = data.category;
             price.value = data.price;
-            stock.value = data.value;
-            contactID[0] = data.id
+            stock.value = data.stock;
+            itemID[0] = data.id
 
             document.getElementById("save").disabled = false;
         });
@@ -151,7 +138,7 @@ document.addEventListener("click", e =>{
     //btn save
     if(e.target.id == "save") {
         let input = getInput();
-        const id = contactID[0];
+        const id = itemID[0];
         const valid = isValid(input.productName, input.price, input.stock);
 
         if(valid) {
@@ -167,7 +154,7 @@ document.addEventListener("click", e =>{
             })
             .then(res => view())
             clearForm()
-            alert('Contact Has Been Updated')
+            alert('item Has Been Updated')
 
             document.getElementById("save").disabled = true;
         };

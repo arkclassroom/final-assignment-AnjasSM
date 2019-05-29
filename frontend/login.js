@@ -1,15 +1,18 @@
-const base_url = "http://localhost:4000/Users"
+const base_url = "http://localhost:4000/users"
 
 const validate = (data) => {
-    let email = document.getElementById("inputemail").Value;
-    let password = document.getElementById("inputpassword").Value;
+    let email = document.getElementById("email").value;
+    let password = document.getElementById("password").value;
 
     data.map(user => {
         if(email == user.email) {
             if(password == password) {
+                let manage = document.getElementById("manage");
+                manage.setAttribute("class", "nav-link");
                 alert("Login Successfully");
-                window.location = "/";
-                return true;
+                document.cookie = `name = ${user.email}`
+                alert(`welcome ${user.email} \n now you can access manage inventory`)
+                return false;
             } else {
                 alert("Wrong Password")
                 return false
@@ -23,7 +26,7 @@ const validate = (data) => {
 
 //fetch user from db
 const getData = () => {
-    fetch(`${base_url}`)
+    fetch(base_url)
     .then(res => res.json())
     .then(data => {
         validate(data)
