@@ -1,8 +1,8 @@
-const base_url = "http://localhost:4000/users"
+const base_url = "http://localhost:4000/Users"
 
 const validate = (data) => {
-    let email = document.getElementById("email").Value;
-    let password = document.getElementById("password").Value;
+    let email = document.getElementById("inputemail").Value;
+    let password = document.getElementById("inputpassword").Value;
 
     data.map(user => {
         if(email == user.email) {

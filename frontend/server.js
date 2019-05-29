@@ -14,9 +14,9 @@ app.get("/",(req,res,next) => {
 });
 
 app.get("/manage",(req,res,next) => {
-    res.sendfile("manage")
+    res.sendfile("manage.html")
 });
 
 app.get("/login",(req,res,next) => {
-    res.sendfile("login")
+    res.sendfile("login.html")
 });
