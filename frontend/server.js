@@ -10,7 +10,7 @@ app.listen(port, () => {
 app.use(express.static(__dirname))
 
 app.get("/",(req,res,next) => {
-    res.sendfile("index")
+    res.sendfile("home.html")
 });
 
 app.get("/manage",(req,res,next) => {
